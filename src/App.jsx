@@ -8,6 +8,10 @@ import SignIn from "./Pages/SignIn";
 import SignUp from "./Pages/SignUp";
 import PageNotFound from "./Pages/PageNotFound";
 import Navbar from './Components/Navbar';
+import { firebaseConfig } from './Config/firebase';
+import { initializeApp } from 'firebase/app';
+
+export const app = initializeApp(firebaseConfig);
 
 const App = () => {
 
@@ -15,7 +19,7 @@ const App = () => {
 
   return (
     <BrowserRouter>
-      <Context.Provider>
+      <Context.Provider value={{ user, setUser }}>
         <Navbar />
         <Routes>
           <Route path='/' element={<Home />} />
