@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import { Context } from "../Context/Context";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { app } from "../App";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const SignUp = () => {
 
@@ -18,7 +18,7 @@ const SignUp = () => {
         await createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             // Signed in
-            console.log(userCredential);
+            // console.log(userCredential);
             context.setUser({email: userCredential.user.email, uid: userCredential.user.uid});
             // ...
             navigate("/");
@@ -61,11 +61,10 @@ const SignUp = () => {
                         className="w-full text-center py-3 rounded bg-green-300 hover:bg-green-500 text-black hover:bg-green-dark focus:outline-none my-1"
                     >SignUp</button>
                 </div>
-                <div className="text-grey-dark mt-6">
-                    Already have an account? 
-                    <a className="no-underline border-b border-blue text-blue" href="../login/">
-                        Log in
-                    </a>
+                <div className="text-grey-dark mt-6 flex flex-row items-center">
+                    <p>Already have an account?</p>
+                    <span>&nbsp;</span>
+                    <NavLink to={"/signin"}><p className="no-underline border-b border-blue text-sky-800 font-semibold">Log in</p></NavLink>
                 </div>
             </div>
         </div>
