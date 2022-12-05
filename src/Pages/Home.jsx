@@ -3,45 +3,48 @@ import { useState, useContext } from "react";
 import RepoCard from "../Components/RepoCard";
 import { Context } from "../Context/Context";
 import axios from "axios";
+import { useEffect } from "react";
 
 const Home = () => {
     const [uid, setUid] = useState(null);
     const context = useContext(Context);
 
-    // const [username, setUsername] = useState("");
-    const username = "iamkabilash";
     const [userInfo, setUserInfo] = useState([]);
     const [projectData, setProjectData] = useState([]);
+    const [userName, setUserName] = useState("");
     
     const fetchUserData = async() => {
-        const userResponse = await axios.get(`https://api.github.com/users/${username}`);
-        const projectResponse = await axios.get(`https://api.github.com/users/${username}/repos`);
+        const userResponse = await axios.get(`https://api.github.com/users/${userName}`);
+        const projectResponse = await axios.get(`https://api.github.com/users/${userName}/repos`);
         setUserInfo(userResponse.data);
         setProjectData(projectResponse.data);
     }
     
     const handleButtonClick = () => {
         fetchUserData();
+        setUserName("");
     }
 
-    const auth = getAuth();
-    onAuthStateChanged(auth, (user) => {
-    if (user) {
-        // User is signed in, see docs for a list of available properties
-        // https://firebase.google.com/docs/reference/js/firebase.User
-        setUid(user.uid);
-        context.setUser({email: user.email, uid: user.uid});
-    } else {
-        // User is signed out
-        setUid(null);
-    }
-    });
+    useEffect(() => {
+        const auth = getAuth();
+        onAuthStateChanged(auth, (user) => {
+        if (user) {
+            // User is signed in, see docs for a list of available properties
+            // https://firebase.google.com/docs/reference/js/firebase.User
+            setUid(user.uid);
+            context.setUser({email: user.email, uid: user.uid});
+        } else {
+            // User is signed out
+            setUid(null);
+        }
+        });
+    }, [context]);
 
     return(
         uid ? (
             <div>
                 <div className="ml-[70px] mt-[30px] flex">
-                    <input className="rounded-l-lg p-2 border-t mr-0 border-b border-l text-gray-800 w-[300px] border-gray-200 bg-white" placeholder="Github username" />
+                    <input onChange={(e) => setUserName(e.target.value)} value={userName} type="text" className="rounded-l-lg p-2 border-t mr-0 border-b border-l text-gray-800 w-[300px] border-gray-200 bg-white" placeholder="Github userName" />
                     <button onClick={() => handleButtonClick()} className="px-8 rounded-r-lg bg-yellow-400 hover:bg-green-400 text-gray-800 font-bold p-2 border-yellow-500 border-t border-b border-r">Get User</button>
                 </div>
                 {userInfo.hasOwnProperty("login") ? (<section className='mx-[70px] mt-[30px] flex flex-col xl:flex-row gap-[50px] items-center justify-between xl:justify-between'>
